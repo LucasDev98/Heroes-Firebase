@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
-
+import { HttpClientModule } from '@angular/common/http';
 //Components
 import { HeroeComponent } from './components/pages/heroe/heroe.component';
 import { HeroesComponent } from './components/pages/heroes/heroes.component';
@@ -19,7 +19,8 @@ import { HeroesComponent } from './components/pages/heroes/heroes.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -6,6 +6,7 @@ import { HeroesComponent } from './components/pages/heroes/heroes.component';
 const routes: Routes = [
   { path:'heroes', component: HeroesComponent },
   { path:'heroe/:id', component: HeroeComponent },
+  { path:'heroe/editar/:id', component: HeroeComponent },
   { path: '**', pathMatch:'full', redirectTo: 'heroes' }
 ];
 
