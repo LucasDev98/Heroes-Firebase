@@ -15,12 +15,7 @@ export class HeroesComponent {
 
   constructor( private heroeService : HeroeService,
                private router : Router ){
-    this.heroeService.obtenerHeroes()
-        .subscribe( ( data:any )=> {
-            this.heroes = data;
-            this.loading = false;
-            console.log( this.heroes )
-        })
+      this.mostrarHeroes()
   }
 
   eliminarHeroe( heroe: HeroeModel ){
@@ -29,11 +24,13 @@ export class HeroesComponent {
       title:'Eliminar',
       icon:'error',
       text:`Seguro que desea eliminar a ${ heroe.nombre } `,
-      showDenyButton: true,
-      denyButtonText: `Salir`,
-      confirmButtonText:"Si, eliminar"
+      showCancelButton:true,
+      showConfirmButton:false,
+      showDenyButton:true,
+      cancelButtonText: `Salir`,
+      denyButtonText:'Eliminar'
     }).then( result => {
-        if ( result.isConfirmed ) {
+        if ( result.isDenied ) {
           this.heroeService.eliminarHeroe( heroe.id! )
               .subscribe( data => {
                 Swal.fire({
@@ -41,13 +38,37 @@ export class HeroesComponent {
                   icon:'success',
                   text:'Heroe eliminado con extio'
                 })
+                this.mostrarHeroes()
               })
         }
     })
-    console.log( heroe.id );
   }
   editarHeroe( heroe : HeroeModel ){
-    console.log('click')
+
     this.router.navigate([`/heroe/editar/${heroe.id}`])
+  }
+
+  mostrarHeroes(){
+    this.heroeService.obtenerHeroes()
+        .subscribe( ( data:any )=> {
+            this.heroes = data;
+            this.loading = false;
+        })
+  }
+
+  buscarHeroe( heroeText : string ){
+
+    let heroesBusqueda = [];
+
+    this.heroes.forEach( heroe => {
+
+        let heroeNombre = heroe.nombre.toLocaleLowerCase()
+
+        if ( heroe.nombre.indexOf( heroeText.toLocaleLowerCase() ) >= 0 ) {
+
+        }
+    })
+
+
   }
 }

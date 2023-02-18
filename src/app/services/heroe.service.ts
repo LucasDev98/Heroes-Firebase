@@ -19,6 +19,13 @@ export class HeroeService {
       .pipe( map( this.crearArr  ) ) //Resp de Firebase la convierte en array para poder iterar
   }
 
+  obtenerHeroe( id : string ){
+    return this.http.get(`${this.url}/heroes/${id}.json`)
+      .pipe( map( heroe => {
+          return heroe
+      }))
+  }
+
   private crearArr( heroesObj : any ){
       const heroes : HeroeModel []= []
       if( heroesObj == null ) {
@@ -36,10 +43,7 @@ export class HeroeService {
   }
   crearHeroe( heroe : HeroeModel ){
       return this.http.post(`${ this.url }/heroes.json`, heroe )
-        .pipe( map( ( data : any ) => {
-            heroe.id = data.name;
-            return heroe;
-        }))
+
   }
 
   actualizarHeroe( heroe : HeroeModel ){

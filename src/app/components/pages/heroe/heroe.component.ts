@@ -1,22 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HeroeModel } from 'src/app/models/heroe.model';
 import { NgForm } from '@angular/forms'
 import { HeroeService } from 'src/app/services/heroe.service';
 import Swal from 'sweetalert2';
 import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-heroe',
   templateUrl: './heroe.component.html',
   styleUrls: ['./heroe.component.css']
 })
-export class HeroeComponent {
+export class HeroeComponent implements OnInit {
     heroe : HeroeModel = new HeroeModel();
+    constructor( private heroeService : HeroeService,
+                 private activateRoute : ActivatedRoute,
+                 private router : Router ){
 
-    constructor( private heroeService : HeroeService ){
-
+        if( this.router.url.includes('editar') ){
+          this.activateRoute.params.subscribe( ( data :any ) => {
+              this.heroeService.obtenerHeroe( data.id )
+                .subscribe( ( resp : any ) => {
+                  resp.id = data.id;
+                  this.heroe = resp;
+                })
+        })
+        }
     }
-
+    ngOnInit() {
+      const id = this.activateRoute.snapshot.paramMap.get('id');
+      console.log(id)
+    }
     onSubmit( form : NgForm ) {
 
         if ( form.invalid ){
@@ -34,22 +48,30 @@ export class HeroeComponent {
 
        if( this.heroe.id ) {
           //Actualizar Heroe
-          this.heroeService.actualizarHeroe( this.heroe );
-          Swal.fire({
-            title: this.heroe.nombre,
-            icon:'success',
-            text:'Se actualizado Correctamente'
-          })
+          console.log( this.heroe )
+          this.heroeService.actualizarHeroe( this.heroe )
+              .subscribe( data =>{
+                console.log( data )
+                Swal.fire({
+                  title: this.heroe.nombre,
+                  icon:'success',
+                  text:'Se actualizado Correctamente'
+                })
+              })
+
        }else {
           //Crear Heroe
           this.heroeService.crearHeroe( this.heroe )
-            .subscribe( data => this.heroe = data );
-          Swal.fire({
-              title: this.heroe.nombre,
-              icon:'success',
-              text:'Creado con exito'
-          })
+            .subscribe( ( ) => {
+                Swal.fire({
+                  title: this.heroe.nombre,
+                  icon:'success',
+                  text:'Creado con exito'
+              })
+            })
+            console.log( this.heroe )
+            form.reset();
        }
-
     }
+
 }
